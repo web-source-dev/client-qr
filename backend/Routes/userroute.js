@@ -63,6 +63,7 @@ router.post('/qrdata', upload.single('profileImage'), async (req, res) => {
 router.get('/users', async (req, res) => {
   try {
     const users = await Data.find(); // Fetch all users from the database
+    res.send(users)
     res.status(200).json(users); // Send the users as a JSON response
   } catch (error) {
     console.error('Error fetching users:', error);
