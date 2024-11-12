@@ -71,7 +71,7 @@ END:VCARD`;
             <div className='image-name-flex'>
               {user.profileImage && (
                 <img
-                  src={`http://localhost:5000/uploads/${user.profileImage}`} // Fix the path here
+                  src={`https://client-qr.vercel.app/uploads/${user.profileImage}`} // Fix the path here
                   alt={`${user.name}'s profile`}
                   className="profile-image"
                   width='50px'
