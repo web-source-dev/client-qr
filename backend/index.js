@@ -1,31 +1,29 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const bodyParser = require('body-parser')
-
-require('dotenv').config();
 const path = require('path');
+const fs = require('fs');
+require('dotenv').config();
 
 // Initialize app
 const app = express();
+app.use(express.json());
 
-app.use(bodyParser.json())
 // Middleware
-app.use(express.json());  // Parse incoming JSON requests
 const corsOptions = {
-  origin: 'https://qr-code-data.netlify.app',  // Frontend URL
-  methods: ['GET', 'POST', 'PUT'],  // Allowed HTTP methods
-  allowedHeaders: ['Content-Type', 'Authorization'],  // Allowed headers
+  origin: 'https://client-qr-y6zm.vercel.app' || 'http://localhost:3000',
+  methods: ['GET', 'POST', 'PUT'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 };
-
-// Enable CORS for all routes
 app.use(cors(corsOptions));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-
-console.log(path.join(__dirname, 'uploads'));  // Log the full path to the uploads directory
-
-
+// Ensure uploads directory exists
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir);
+  console.log('Created uploads directory');
+}
+app.use('/uploads', express.static(uploadsDir));
 
 // MongoDB Connection using Mongoose
 const connectDB = async () => {
@@ -33,13 +31,12 @@ const connectDB = async () => {
     await mongoose.connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 30000, // 30 seconds
-      socketTimeoutMS: 45000, // 45 seconds
+      serverSelectionTimeoutMS: 30000,
+      socketTimeoutMS: 45000,
     });
     console.log('MongoDB connected with Mongoose...');
   } catch (err) {
     console.error('MongoDB connection error:', err.message);
-    process.exit(1);
   }
 };
 
@@ -50,11 +47,13 @@ connectDB();
 const userRoutes = require('./Routes/userroute');
 app.use('/api', userRoutes);
 
-app.get('/',(req, res) => {
+app.get('/', (req, res) => {
   res.send('Welcome to the QR Code API!');
-})
+});
+
 // Set up port
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
