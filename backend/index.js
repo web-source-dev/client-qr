@@ -12,7 +12,14 @@ const app = express();
 app.use(bodyParser.json())
 // Middleware
 app.use(express.json());  // Parse incoming JSON requests
-app.use(cors());
+const corsOptions = {
+  origin: 'https://client-qr-y6zm.vercel.app',  // Frontend URL
+  methods: ['GET', 'POST', 'PUT'],  // Allowed HTTP methods
+  allowedHeaders: ['Content-Type', 'Authorization'],  // Allowed headers
+};
+
+// Enable CORS for all routes
+app.use(cors(corsOptions));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
