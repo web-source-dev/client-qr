@@ -13,7 +13,7 @@ app.use(bodyParser.json())
 // Middleware
 app.use(express.json());  // Parse incoming JSON requests
 const corsOptions = {
-  origin: 'https://client-qr-y6zm.vercel.app',  // Frontend URL
+  origin: 'https://qr-code-data.netlify.app',  // Frontend URL
   methods: ['GET', 'POST', 'PUT'],  // Allowed HTTP methods
   allowedHeaders: ['Content-Type', 'Authorization'],  // Allowed headers
 };
