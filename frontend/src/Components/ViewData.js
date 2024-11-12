@@ -11,7 +11,7 @@ const ViewData = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/users');
+        const response = await axios.get('https://client-qr.vercel.app/api/users');
         console.log(response.data);
         setUsers(response.data); // Load users with their initial `isAllowed` status
       } catch (error) {
@@ -25,7 +25,7 @@ const ViewData = () => {
   // Handle checkbox change to show/hide QR code and update database
   const handleCheckboxChange = async (userId, isChecked) => {
     try {
-      await axios.put(`http://localhost:5000/api/users/${userId}`, { isAllowed: isChecked });
+      await axios.put(`https://client-qr.vercel.app/api/users/${userId}`, { isAllowed: isChecked });
       setUsers((prevUsers) =>
         prevUsers.map((user) =>
           user._id === userId ? { ...user, isAllowed: isChecked } : user
@@ -54,7 +54,7 @@ const ViewData = () => {
                   {/* Show profile image only if available */}
                   {user.profileImage && (
                     <img
-                      src={`http://localhost:5000/uploads/${user.profileImage}`} // Fix the path here
+                      src={`https://client-qr.vercel.app/uploads/${user.profileImage}`} // Fix the path here
                       alt={`${user.name}'s profile`}
                       className="profile-image"
                       width="50px"
@@ -121,7 +121,7 @@ const ViewData = () => {
                 <div className="qr-code-all">
                   <QRCodeCanvas
                     // Encodes URL with the userId to navigate to the user details page
-                    value={`http://localhost:3000/user/${user._id}`} // Use the user._id to link to their details page
+                    value={`https://client-qr-y6zm.vercel.app/user/${user._id}`} // Use the user._id to link to their details page
                     size={70}
                   />
                 </div>
