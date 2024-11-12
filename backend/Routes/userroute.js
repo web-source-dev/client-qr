@@ -13,20 +13,32 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
   console.log('Uploads directory created.');
 }
-
-// Configure multer for image uploads
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadsDir); // Ensure files are saved to the correct folder
+  destination: (req, file, cb) => {
+    cb(null, uploadsDir);  // Specify the folder to save images (ensure this folder exists)
   },
-  filename: function (req, file, cb) {
-    const uniqueFilename = `${shortid.generate()}${path.extname(file.originalname)}`;
-    cb(null, uniqueFilename);
-  }
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));  // Save the image with a unique name
+  },
 });
 
+// Filter to only accept images
+const fileFilter = (req, file, cb) => {
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+  if (allowedTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error('Invalid file type. Only images are allowed.'));
+  }
+};
 
-const upload = multer({ storage: storage });
+// Create Multer upload middleware
+const upload = multer({
+  storage: storage,
+  fileFilter: fileFilter,
+  limits: { fileSize: 5 * 1024 * 1024 },  // Limit file size to 5MB
+});
+
 
 // POST route for storing QR data and creating QR code
 router.post('/qrdata', upload.single('profileImage'), async (req, res) => {
